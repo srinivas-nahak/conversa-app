@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:messaging_app/screens/welcome_screen.dart';
+import 'package:messaging_app/utilities/constants.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ResponsiveSizer(
+    builder: (context, orientation, screenType) {
+      return const MyApp();
+    },
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -10,9 +17,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Restricting the app's orientation to be portrait
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
     return MaterialApp(
-      theme: ThemeData()
-          .copyWith(useMaterial3: true, scaffoldBackgroundColor: Color(0xff)),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData().copyWith(
+          useMaterial3: true, scaffoldBackgroundColor: kScaffoldBgColor),
       home: const WelcomeScreen(),
     );
   }
