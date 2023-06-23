@@ -24,7 +24,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData().copyWith(
-          useMaterial3: true, scaffoldBackgroundColor: kScaffoldBgColor),
+        useMaterial3: true,
+        scaffoldBackgroundColor: kScaffoldBgColor,
+      ),
       home: const WelcomeScreen(),
     );
   }
