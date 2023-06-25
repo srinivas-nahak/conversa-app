@@ -2,28 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:messaging_app/utilities/constants.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-enum kInputType { email, text, password }
+enum kInputType { email, userName, password }
 
-class ReusableTextField extends StatefulWidget {
-  const ReusableTextField(
+String signupPassword = "";
+
+class UserAuthenticationTextField extends StatefulWidget {
+  const UserAuthenticationTextField(
       {required this.label,
       required this.hintText,
       required this.inputType,
       required this.typedString,
+      this.fetchController,
+      this.isSignupPagePassword = false,
       super.key});
 
   final String label, hintText;
   final kInputType inputType;
   final void Function(String text) typedString;
+  final bool isSignupPagePassword;
+  final void Function(TextEditingController controller)? fetchController;
+
+  //Function get clearFields => this.resetFields;
 
   @override
-  State<ReusableTextField> createState() => _ReusableTextFieldState();
+  State<UserAuthenticationTextField> createState() =>
+      _UserAuthenticationTextFieldState();
 }
 
-class _ReusableTextFieldState extends State<ReusableTextField> {
+class _UserAuthenticationTextFieldState
+    extends State<UserAuthenticationTextField> {
+  final TextEditingController _textEditingController = TextEditingController();
+
   TextInputType getTextInputType() {
     switch (widget.inputType) {
-      case kInputType.text:
+      case kInputType.userName:
         return TextInputType.text;
       case kInputType.email:
         return TextInputType.emailAddress;
@@ -38,7 +50,14 @@ class _ReusableTextFieldState extends State<ReusableTextField> {
   @override
   void initState() {
     super.initState();
+
+    //Passing controller to the main parent class
+    if (widget.fetchController != null) {
+      widget.fetchController!(_textEditingController);
+    }
   }
+
+  void resetFields() {}
 
   void _verifyText(String text) {
     // if (widget.inputType == kInputType.email) {
@@ -54,8 +73,8 @@ class _ReusableTextFieldState extends State<ReusableTextField> {
       case kInputType.password:
         _verifyPassword(text);
         break;
-      case kInputType.text:
-        _verifyEmail(text);
+      case kInputType.userName:
+        _verifyUserName(text);
         break;
     }
   }
@@ -68,10 +87,20 @@ class _ReusableTextFieldState extends State<ReusableTextField> {
     setState(() {
       if (text.length > 5 && !isEmail) {
         _errorText = "Email is invalid!";
+      } else if (text.isEmpty || isEmail) {
+        _errorText = null;
 
         //Passing String to the main Widget
-        widget.typedString("");
-      } else if (text.isEmpty || isEmail) {
+        widget.typedString(text.toLowerCase());
+      }
+    });
+  }
+
+  void _verifyUserName(String text) {
+    setState(() {
+      if (text.length > 1 && text.length < 4) {
+        _errorText = "Please enter at least 4 characters";
+      } else if (text.isEmpty || text.length > 4) {
         _errorText = null;
 
         //Passing String to the main Widget
@@ -88,10 +117,18 @@ class _ReusableTextFieldState extends State<ReusableTextField> {
       if (text.length > 3 && !isPassword) {
         _errorText =
             "It must contain mixed case(aA), special characters like \$,@ & numbers";
-
-        //Passing String to the main Widget
-        widget.typedString("");
       } else if (text.isEmpty || isPassword) {
+        //Storing password in signup screen for password check
+        if (widget.isSignupPagePassword && text.isNotEmpty) {
+          signupPassword = text;
+        }
+
+        //Showing error for password mismatch when entering confirm password
+        if (widget.label == "Confirm Password" && text != signupPassword) {
+          _errorText = "Passwords are not matching!";
+          return;
+        }
+
         _errorText = null;
 
         //Passing String to the main Widget
@@ -100,18 +137,14 @@ class _ReusableTextFieldState extends State<ReusableTextField> {
     });
   }
 
-  OutlineInputBorder getOutineBorder(Color color) => OutlineInputBorder(
-        borderSide: BorderSide(color: color, width: 1.3),
-        borderRadius: BorderRadius.circular(20.sp),
-      );
-
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: _textEditingController,
       maxLines: 1,
       keyboardType: getTextInputType(),
       onChanged: _verifyText,
-      style: kBodyTextStyle.copyWith(fontSize: 16),
+      style: kBodyTextStyle.copyWith(fontSize: 15.sp),
       obscureText: !_hidePassword && widget.inputType == kInputType.password,
       autocorrect: false,
       decoration: InputDecoration(
@@ -124,10 +157,10 @@ class _ReusableTextFieldState extends State<ReusableTextField> {
         hintStyle: TextStyle(
           color: kPrimaryColor.withOpacity(0.3),
         ),
-        enabledBorder: getOutineBorder(kPrimaryColor.withOpacity(0.2)),
-        focusedBorder: getOutineBorder(kPrimaryColor),
-        errorBorder: getOutineBorder(Colors.redAccent),
-        focusedErrorBorder: getOutineBorder(Colors.redAccent),
+        enabledBorder: kGetOutineBorder(kPrimaryColor.withOpacity(0.2)),
+        focusedBorder: kGetOutineBorder(kPrimaryColor),
+        errorBorder: kGetOutineBorder(Colors.redAccent),
+        focusedErrorBorder: kGetOutineBorder(Colors.redAccent),
         errorText: _errorText,
         suffixIcon: widget.inputType == kInputType.password
             ? Padding(

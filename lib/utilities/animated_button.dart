@@ -29,11 +29,22 @@ class _AnimatedButtonState extends State<AnimatedButton> {
   }
 
   Widget sendButton() => Material(
-        color: kBtnColor,
+        color: kButtonColor,
         borderRadius: BorderRadius.circular(20),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () {
+            //Closing the softKeyboard if it's open
+            // if (FocusManager.instance.primaryFocus!.hasFocus) {
+            //   FocusManager.instance.primaryFocus?.unfocus();
+            // }
+
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+
             setState(() {
               _isToggled = true;
             });
@@ -64,7 +75,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
         width: widget.width == 0 ? double.infinity : widget.width,
         height: widget.height == 0 ? 8.h : widget.height,
         child: Material(
-          color: kBtnColor,
+          color: kButtonColor,
           borderRadius: BorderRadius.circular(20.sp),
           surfaceTintColor: Colors.transparent,
           shadowColor: Colors.transparent,
@@ -83,10 +94,9 @@ class _AnimatedButtonState extends State<AnimatedButton> {
                 });
 
                 //Invoking onPressed after the end of the animation
-                Timer(
-                  const Duration(milliseconds: 150),
-                  () => widget.onPressed.call(),
-                );
+                Timer(const Duration(milliseconds: 150), () {
+                  widget.onPressed.call();
+                });
               });
             },
             child: Center(

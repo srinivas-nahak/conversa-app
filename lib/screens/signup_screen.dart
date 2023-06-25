@@ -1,12 +1,105 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:messaging_app/utilities/animated_button.dart';
 import 'package:messaging_app/utilities/constants.dart';
-import 'package:messaging_app/utilities/reusable_text_field.dart';
+import 'package:messaging_app/utilities/user_authentication_text_field.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class SignupScreen extends StatelessWidget {
+import '../main.dart';
+import '../utilities/user_image_picker.dart';
+import 'chat_screen.dart';
+
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  String _enteredUserName = "";
+
+  String _enteredEmail = "";
+
+  String _enteredPassword = "";
+
+  File? _selectedImage;
+
+  bool _isAuthenticating = false;
+
+  void _submitUserData() async {
+    if (_enteredUserName.trim().isEmpty ||
+        _enteredEmail.trim().isEmpty ||
+        _enteredEmail.trim().isEmpty ||
+        _selectedImage == null) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please recheck all the fields!"),
+        ),
+      );
+    } else {
+      try {
+        //Showing Loader or Progress
+        setState(() {
+          _isAuthenticating = true;
+        });
+
+        final userCredentials =
+            await kFirebaseAuth.createUserWithEmailAndPassword(
+                email: _enteredEmail, password: _enteredPassword);
+
+        //We're storing the image in Firebase Storage after creating the user above
+        //Here we're using the unique id of the user to name the image
+        final imageStorageRef = FirebaseStorage.instance
+            .ref()
+            .child("user_images")
+            .child("${userCredentials.user!.uid}.jpg");
+
+        await imageStorageRef.putFile(_selectedImage!);
+
+        final imageUrl = await imageStorageRef.getDownloadURL();
+
+        //Storing the image for particular user
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(userCredentials.user!.uid)
+            .set({
+          "userName": _enteredUserName,
+          "email": _enteredEmail,
+          "userImage":
+              imageUrl //Here we're only storing the imageLink not the image file
+        });
+
+        //Navigating to the chat screen on Successful login
+        if (context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(),
+            ),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.message ?? "Some unknown error occured!"),
+          ),
+        );
+
+        //Closing the Loader or Progress
+        setState(() {
+          _isAuthenticating = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,66 +126,100 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
+            SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-                Expanded(
-                  flex: 5,
-                  child: Center(
-                    child: SizedBox(
-                      width: 100.w,
-                      child: const Text("Let's Get Started....",
-                          style: kHeadingMaxTextStyle),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child:
+                    Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  // Expanded(
+                  //   flex: 5,
+                  //   child: Center(
+                  //     child: SizedBox(
+                  //       width: 100.w,
+                  //       child: const Text("Let's Get Started....",
+                  //           style: kHeadingMaxTextStyle),
+                  //     ),
+                  //   ),
+                  // ),
+                  Expanded(
+                    flex: 4,
+                    child: Center(
+                      child: UserImagePicker(
+                        onPickImage: (pickedImageFile) {
+                          _selectedImage = pickedImageFile;
+                        },
+                      ),
                     ),
                   ),
-                ),
-                ReusableTextField(
-                  label: "User Name",
-                  hintText: "Enter your username",
-                  inputType: kInputType.text,
-                  typedString: (_) {},
-                ),
-                SizedBox(height: 3.h),
-                ReusableTextField(
-                  label: "Email",
-                  hintText: "Enter your email",
-                  inputType: kInputType.email,
-                  typedString: (_) {},
-                ),
-                SizedBox(height: 3.h),
-                ReusableTextField(
-                  label: "Password",
-                  hintText: "Enter your password",
-                  inputType: kInputType.password,
-                  typedString: (_) {},
-                ),
-                SizedBox(height: 3.h),
-                ReusableTextField(
-                  label: "Confirm Password",
-                  hintText: "Confirm your password",
-                  inputType: kInputType.password,
-                  typedString: (_) {},
-                ),
-                SizedBox(height: 3.h),
-                AnimatedButton(
-                  height: 6.h,
-                  btnText: "Sign Up",
-                  onPressed: () {},
-                ),
-                const Spacer(),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+                  UserAuthenticationTextField(
+                    label: "User Name",
+                    hintText: "Enter your username",
+                    inputType: kInputType.userName,
+                    typedString: (enteredUserName) {
+                      _enteredUserName = enteredUserName;
                     },
-                    child: Text(
-                      "Already have an account? Log In Now!",
-                      style: kBodyTextStyle.copyWith(fontSize: 18),
-                    )),
-                SizedBox(
-                  height: 3.h,
-                ),
-              ]),
+                  ),
+                  SizedBox(height: 3.h),
+                  UserAuthenticationTextField(
+                    label: "Email",
+                    hintText: "Enter your email",
+                    inputType: kInputType.email,
+                    typedString: (enteredEmail) {
+                      _enteredEmail = enteredEmail;
+                    },
+                  ),
+                  SizedBox(height: 3.h),
+                  UserAuthenticationTextField(
+                    label: "Password",
+                    hintText: "Enter your password",
+                    inputType: kInputType.password,
+                    typedString: (_) {},
+                    isSignupPagePassword: true,
+                  ),
+                  SizedBox(height: 3.h),
+                  UserAuthenticationTextField(
+                    label: "Confirm Password",
+                    hintText: "Confirm your password",
+                    inputType: kInputType.password,
+                    typedString: (confirmedPassword) {
+                      _enteredPassword = confirmedPassword;
+                    },
+                  ),
+                  SizedBox(height: 3.h),
+
+                  if (_isAuthenticating)
+                    const CircularProgressIndicator(
+                      color: kButtonColor,
+                    ),
+
+                  if (!_isAuthenticating)
+                    AnimatedButton(
+                      height: 6.h,
+                      btnText: "Sign Up",
+                      onPressed: () {
+                        //Closing the keyboard
+                        FocusScope.of(context).unfocus();
+
+                        //Submitting the data
+                        _submitUserData();
+                      },
+                    ),
+
+                  const Spacer(),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Already have an account? Log In Now!",
+                        style: kBodyTextStyle.copyWith(fontSize: 17.sp),
+                      )),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                ]),
+              ),
             ),
           ],
         ),
