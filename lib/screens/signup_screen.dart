@@ -150,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           _selectedImage = pickedImageFile;
                         },
                       ),
-                      SizedBox(height: 5.h),
+                      SizedBox(height: 7.h),
                       UserAuthenticationTextField(
                         label: "User Name",
                         hintText: "Enter your username",

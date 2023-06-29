@@ -100,43 +100,16 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 0,
         backgroundColor: const Color(0xffefeeee).withAlpha(200),
         title: Text(
-          "Chat Screen",
+          "Conversa Hub",
           style: kBodyTextStyle,
         ),
         actions: [
-          IconButton(
-            onPressed: _signOut,
-            icon: const Icon(Icons.power_settings_new),
-          )
-        ],
-      );
-
-  PreferredSize getNewAppBar() => PreferredSize(
-        preferredSize: Size(MediaQuery.of(context).size.width, 50),
-        child: SafeArea(
-          child: ClipRRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Text(
-                "Chat Screen",
-                style: kBodyTextStyle,
-              ),
+          Padding(
+            padding: EdgeInsets.only(right: 2.5.w),
+            child: IconButton(
+              onPressed: _signOut,
+              icon: const Icon(Icons.power_settings_new),
             ),
-          ),
-        ),
-      );
-
-  AppBar _getSimpleAppBar() => AppBar(
-        iconTheme: const IconThemeData().copyWith(color: kPrimaryColor),
-        centerTitle: true,
-        title: Text(
-          "Chat Screen",
-          style: kBodyTextStyle,
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => kFirebaseAuth.signOut(),
-            icon: const Icon(Icons.power_settings_new),
           )
         ],
       );

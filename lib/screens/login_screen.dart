@@ -106,7 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
@@ -162,9 +161,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             Navigator.push(
                               context,
-                              AnimatedPageRoute(
-                                child: const SignupScreen(),
-                              ),
+                              MaterialPageRoute(
+                                  builder: (context) => const SignupScreen()),
                             );
                           },
                           child: Text(

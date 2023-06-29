@@ -98,7 +98,7 @@ class MessageBubble extends StatelessWidget {
             decoration: BoxDecoration(
               color: isMe
                   ? kButtonColor.withOpacity(0.8)
-                  : kPrimaryColor.withOpacity(0.15),
+                  : kPrimaryColor.withOpacity(0.1),
               borderRadius: isMe ? meBorderRadius : otherBorderRadius,
             ),
             child: ConstrainedBox(
@@ -122,8 +122,9 @@ class MessageBubble extends StatelessWidget {
     //Setting the top padding for very first message
     //By setting padding to the parent list view it was being cut from top
 
-    final padding = EdgeInsets.symmetric(vertical: 0.4.h)
-        .copyWith(bottom: isLastMessage ? 1.5.h : 0.4.h);
+    final padding = EdgeInsets.symmetric(vertical: 0.4.h).copyWith(
+      bottom: isLastMessage ? 2.5.h : 0.4.h,
+    );
 
     if (isVeryFirstMessage) {
       return padding.copyWith(top: 4.h);

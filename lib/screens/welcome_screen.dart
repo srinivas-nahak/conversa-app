@@ -37,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
                     const [
                       "**",
                     ],
-                    value: 80,
+                    value: 90,
                   ),
                   ValueDelegate.transformPosition(
                     const ["Square", "**"],
@@ -81,7 +81,7 @@ class WelcomeScreen extends StatelessWidget {
                     flex: 3,
                   ),
                   AnimatedButton(
-                      width: 60.w,
+                      height: 8.h,
                       btnText: "Unite Now!",
                       onPressed: () {
                         Navigator.pushReplacement(
