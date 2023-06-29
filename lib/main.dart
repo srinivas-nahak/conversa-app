@@ -3,8 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:messaging_app/screens/welcome_screen.dart';
 import 'package:messaging_app/utilities/constants.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(ResponsiveSizer(
     builder: (context, orientation, screenType) {
       return const MyApp();
@@ -21,10 +29,15 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
+    //Hiding the status bar
+    //SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData().copyWith(
-          useMaterial3: true, scaffoldBackgroundColor: kScaffoldBgColor),
+        useMaterial3: true,
+        scaffoldBackgroundColor: kScaffoldBgColor,
+      ),
       home: const WelcomeScreen(),
     );
   }

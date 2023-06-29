@@ -1,7 +1,12 @@
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
+import 'package:messaging_app/screens/chat_screen.dart';
+import 'package:messaging_app/screens/login_screen.dart';
 import 'package:messaging_app/utilities/animated_button.dart';
 import 'package:messaging_app/utilities/constants.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -13,7 +18,7 @@ class WelcomeScreen extends StatelessWidget {
       _subText =
           "Unite through seamless conversations. Connect, chat, and discover meaningful connections.",
       _dummyLicenceText =
-          "Disclaimer: Free Preview. While we make every effort to provide accurate information, occasional inaccuracies about individuals, locations, or facts may occur. Enjoy using our app!";
+          "Disclaimer: Chat for fun only. Inaccuracies may occur. Use responsibly, verify info independently. Connect and enjoy our app!";
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +27,30 @@ class WelcomeScreen extends StatelessWidget {
         children: [
           Transform.scale(
             scale: 1.4,
-            child: Lottie.asset(
-              "assets/animations/moving_circles_brighter.json",
-            ),
+            child: Lottie.asset("assets/animations/moving_circles.json",
+                delegates: LottieDelegates(values: [
+                  // ValueDelegate.blurRadius(
+                  //   const ["**"],
+                  //   value: 50,
+                  // ),
+                  ValueDelegate.opacity(
+                    const [
+                      "**",
+                    ],
+                    value: 90,
+                  ),
+                  ValueDelegate.transformPosition(
+                    const ["Square", "**"],
+                    callback: (frameInfo) {
+                      final currentOffset = frameInfo.startValue;
+
+                      Offset changedOffset =
+                          Offset(currentOffset!.dx, currentOffset.dy + 60);
+
+                      return changedOffset;
+                    },
+                  ),
+                ])),
           ),
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
@@ -40,6 +66,9 @@ class WelcomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Spacer(),
+                  SizedBox(
+                    height: 5.h,
+                  ),
                   Text(_heading, style: kHeadingMaxTextStyle),
                   SizedBox(
                     height: 1.5.h,
@@ -51,13 +80,36 @@ class WelcomeScreen extends StatelessWidget {
                   const Spacer(
                     flex: 3,
                   ),
-                  AnimatedButton(onPressed: () {}),
+                  AnimatedButton(
+                      height: 8.h,
+                      btnText: "Unite Now!",
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StreamBuilder(
+                                stream:
+                                    FirebaseAuth.instance.authStateChanges(),
+                                builder: (context, snapShot) {
+                                  if (snapShot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    //TODO: We can show the loading screen here.
+                                  }
+
+                                  if (snapShot.hasData) {
+                                    return ChatScreen();
+                                  }
+                                  return LoginScreen();
+                                }),
+                          ),
+                        );
+                      }),
                   SizedBox(
-                    height: 1.5.h,
+                    height: 2.h,
                   ),
                   Text(
                     _dummyLicenceText,
-                    style: TextStyle(color: kMainTextColor.withOpacity(0.3)),
+                    style: TextStyle(color: kPrimaryColor.withOpacity(0.3)),
                   ),
                   const Spacer()
                 ],
