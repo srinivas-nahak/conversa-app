@@ -100,89 +100,84 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: SizedBox(
-                          width: 100.w,
-                          child: Text("Welcome Back!",
-                              style: kHeadingMaxTextStyle),
+            SingleChildScrollView(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height - 3.h,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Center(
+                            child: Text("Welcome Back!",
+                                style: kHeadingMaxTextStyle),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 2.3,
-                      child: Column(
-                        children: [
-                          UserAuthenticationTextField(
-                            fetchController: (emailController) =>
-                                _textFieldControllerList.add(emailController),
-                            label: "Username or Email",
-                            hintText: "Enter your username or email",
-                            inputType: kInputType.email,
-                            typedString: (enteredEmail) {
-                              _enteredEmail = enteredEmail;
-                            },
+                        UserAuthenticationTextField(
+                          fetchController: (emailController) =>
+                              _textFieldControllerList.add(emailController),
+                          label: "Username or Email",
+                          hintText: "Enter your username or email",
+                          inputType: kInputType.email,
+                          typedString: (enteredEmail) {
+                            _enteredEmail = enteredEmail;
+                          },
+                        ),
+                        SizedBox(height: 3.h),
+                        UserAuthenticationTextField(
+                          fetchController: (passwordController) =>
+                              _textFieldControllerList.add(passwordController),
+                          label: "Password",
+                          hintText: "Enter your password",
+                          inputType: kInputType.password,
+                          typedString: (enteredPassword) {
+                            _enteredPassword = enteredPassword;
+                          },
+                        ),
+                        SizedBox(height: 3.h),
+                        if (_isAuthenticating)
+                          const CircularProgressIndicator(
+                            color: kButtonColor,
                           ),
-                          SizedBox(height: 3.h),
-                          UserAuthenticationTextField(
-                            fetchController: (passwordController) =>
-                                _textFieldControllerList
-                                    .add(passwordController),
-                            label: "Password",
-                            hintText: "Enter your password",
-                            inputType: kInputType.password,
-                            typedString: (enteredPassword) {
-                              _enteredPassword = enteredPassword;
-                            },
-                          ),
-                          SizedBox(height: 3.h),
-                          if (_isAuthenticating)
-                            const CircularProgressIndicator(
-                              color: kButtonColor,
-                            ),
-                          if (!_isAuthenticating)
-                            AnimatedButton(
-                              height: 6.h,
-                              btnText: "Log In",
-                              onPressed: () {
-                                //Closing the keyboard
-                                FocusScope.of(context).unfocus();
-
-                                //Submitting the data
-                                _submitUserData();
-                              },
-                            ),
-                          const Spacer(),
-                          TextButton(
+                        if (!_isAuthenticating)
+                          AnimatedButton(
+                            height: 6.h,
+                            btnText: "Log In",
                             onPressed: () {
-                              //Clearing text of the text fields
-                              _clearText();
+                              //Closing the keyboard
+                              FocusScope.of(context).unfocus();
 
-                              Navigator.push(
-                                context,
-                                AnimatedPageRoute(
-                                  child: const SignupScreen(),
-                                ),
-                              );
+                              //Submitting the data
+                              _submitUserData();
                             },
-                            child: Text(
-                              "Don't have any account? Sign Up Now!",
-                              style: kBodyTextStyle.copyWith(fontSize: 17.sp),
-                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                  ]),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            //Clearing text of the text fields
+                            _clearText();
+
+                            Navigator.push(
+                              context,
+                              AnimatedPageRoute(
+                                child: const SignupScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Don't have any account? Sign Up Now!",
+                            style: kBodyTextStyle.copyWith(fontSize: 17.sp),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                      ]),
+                ),
+              ),
             ),
           ],
         ),

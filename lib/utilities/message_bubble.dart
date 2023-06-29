@@ -16,13 +16,13 @@ class MessageBubble extends StatelessWidget {
   final String? userImageUrl, userName;
   final String message;
 
-  double _getBubbleHorizontalPadding() {
-    if (_getMessageWordsCount() <= 2) {
-      return 4.w;
-    }
-
-    return 8.w;
-  }
+  // double _getBubbleHorizontalPadding() {
+  //   if (_getMessageWordsCount() <= 2) {
+  //     return 4.w;
+  //   }
+  //
+  //   return 8.w;
+  // }
 
   int _getMessageWordsCount() =>
       RegExp(r"\w+(\'\w+)?").allMatches(message).length;
@@ -43,10 +43,24 @@ class MessageBubble extends StatelessWidget {
           width: 2.w,
         ),
         CircleAvatar(
-          radius: 16.sp,
+          radius: 15.sp,
           backgroundImage: NetworkImage(userImageUrl!),
           backgroundColor: kPrimaryColor,
         ),
+
+        // Container(
+        //   height: 18.sp,
+        //   width: 18.sp,
+        //   decoration: BoxDecoration(
+        //     color: kPrimaryColor,
+        //     borderRadius: BorderRadius.circular(11.sp),
+        //   ),
+        //   clipBehavior: Clip.antiAlias,
+        //   child: Image.network(
+        //     userImageUrl!,
+        //     fit: BoxFit.cover,
+        //   ),
+        // )
       ];
     }
 
@@ -68,31 +82,18 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          // if (userName != null)
-          //   Container(
-          //     padding: EdgeInsets.symmetric(vertical: 0.6.h, horizontal: 3.w),
-          //     decoration: BoxDecoration(
-          //       color: kPrimaryColor.withAlpha(15),
-          //       borderRadius: BorderRadius.circular(25),
-          //     ),
-          //     child: Row(
-          //       children: isMe ? userInfoList : userInfoList.reversed.toList(),
-          //     ),
-          //   ),
-
           if (userName != null && !isMe)
             Row(
               children: isMe ? userInfoList : userInfoList.reversed.toList(),
             ),
-
           if (userName != null && !isMe)
             SizedBox(
               height: 1.h,
             ),
           Container(
             padding: EdgeInsets.symmetric(
-              vertical: 1.5.h,
-              horizontal: _getBubbleHorizontalPadding(),
+              vertical: 1.8.h,
+              horizontal: 6.5.w,
             ),
             decoration: BoxDecoration(
               color: isMe

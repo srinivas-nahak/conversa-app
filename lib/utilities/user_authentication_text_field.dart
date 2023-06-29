@@ -173,6 +173,7 @@ class _UserAuthenticationTextFieldState
                   },
                   icon: Icon(
                     Icons.remove_red_eye,
+                    size: 20,
                     color: _hidePassword
                         ? kPrimaryColor
                         : kPrimaryColor.withOpacity(0.2),

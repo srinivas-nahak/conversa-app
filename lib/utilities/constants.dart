@@ -6,7 +6,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 final kFirebaseAuth = FirebaseAuth.instance;
 
 //Color
-const kScaffoldBgColor = Color(0xffDBD2D3);
+const kScaffoldBgColor = Color(0xffe1dede);
 const kPrimaryColor = Color(0xff2F4858);
 const kButtonColor = Color(0xff5C7ECC);
 
@@ -29,6 +29,6 @@ final kButtonTextStyle = TextStyle(
 );
 
 OutlineInputBorder kGetOutineBorder(Color color) => OutlineInputBorder(
-      borderSide: BorderSide(color: color, width: 1.3),
+      borderSide: BorderSide(color: color, width: 1),
       borderRadius: BorderRadius.circular(20.sp),
     );

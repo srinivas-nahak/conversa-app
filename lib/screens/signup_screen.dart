@@ -129,96 +129,95 @@ class _SignupScreenState extends State<SignupScreen> {
             SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child:
-                    Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  // Expanded(
-                  //   flex: 5,
-                  //   child: Center(
-                  //     child: SizedBox(
-                  //       width: 100.w,
-                  //       child: const Text("Let's Get Started....",
-                  //           style: kHeadingMaxTextStyle),
-                  //     ),
-                  //   ),
-                  // ),
-                  Expanded(
-                    flex: 4,
-                    child: Center(
-                      child: UserImagePicker(
+                height: MediaQuery.of(context).size.height - 5.h,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Expanded(
+                      //   flex: 5,
+                      //   child: Center(
+                      //     child: SizedBox(
+                      //       width: 100.w,
+                      //       child: const Text("Let's Get Started....",
+                      //           style: kHeadingMaxTextStyle),
+                      //     ),
+                      //   ),
+                      // ),
+                      const Spacer(),
+
+                      UserImagePicker(
                         onPickImage: (pickedImageFile) {
                           _selectedImage = pickedImageFile;
                         },
                       ),
-                    ),
-                  ),
-                  UserAuthenticationTextField(
-                    label: "User Name",
-                    hintText: "Enter your username",
-                    inputType: kInputType.userName,
-                    typedString: (enteredUserName) {
-                      _enteredUserName = enteredUserName;
-                    },
-                  ),
-                  SizedBox(height: 3.h),
-                  UserAuthenticationTextField(
-                    label: "Email",
-                    hintText: "Enter your email",
-                    inputType: kInputType.email,
-                    typedString: (enteredEmail) {
-                      _enteredEmail = enteredEmail;
-                    },
-                  ),
-                  SizedBox(height: 3.h),
-                  UserAuthenticationTextField(
-                    label: "Password",
-                    hintText: "Enter your password",
-                    inputType: kInputType.password,
-                    typedString: (_) {},
-                    isSignupPagePassword: true,
-                  ),
-                  SizedBox(height: 3.h),
-                  UserAuthenticationTextField(
-                    label: "Confirm Password",
-                    hintText: "Confirm your password",
-                    inputType: kInputType.password,
-                    typedString: (confirmedPassword) {
-                      _enteredPassword = confirmedPassword;
-                    },
-                  ),
-                  SizedBox(height: 3.h),
+                      SizedBox(height: 5.h),
+                      UserAuthenticationTextField(
+                        label: "User Name",
+                        hintText: "Enter your username",
+                        inputType: kInputType.userName,
+                        typedString: (enteredUserName) {
+                          _enteredUserName = enteredUserName;
+                        },
+                      ),
+                      SizedBox(height: 3.h),
+                      UserAuthenticationTextField(
+                        label: "Email",
+                        hintText: "Enter your email",
+                        inputType: kInputType.email,
+                        typedString: (enteredEmail) {
+                          _enteredEmail = enteredEmail;
+                        },
+                      ),
+                      SizedBox(height: 3.h),
+                      UserAuthenticationTextField(
+                        label: "Password",
+                        hintText: "Enter your password",
+                        inputType: kInputType.password,
+                        typedString: (_) {},
+                        isSignupPagePassword: true,
+                      ),
+                      SizedBox(height: 3.h),
+                      UserAuthenticationTextField(
+                        label: "Confirm Password",
+                        hintText: "Confirm your password",
+                        inputType: kInputType.password,
+                        typedString: (confirmedPassword) {
+                          _enteredPassword = confirmedPassword;
+                        },
+                      ),
+                      SizedBox(height: 3.h),
 
-                  if (_isAuthenticating)
-                    const CircularProgressIndicator(
-                      color: kButtonColor,
-                    ),
+                      if (_isAuthenticating)
+                        const CircularProgressIndicator(
+                          color: kButtonColor,
+                        ),
 
-                  if (!_isAuthenticating)
-                    AnimatedButton(
-                      height: 6.h,
-                      btnText: "Sign Up",
-                      onPressed: () {
-                        //Closing the keyboard
-                        FocusScope.of(context).unfocus();
+                      if (!_isAuthenticating)
+                        AnimatedButton(
+                          height: 6.h,
+                          btnText: "Sign Up",
+                          onPressed: () {
+                            //Closing the keyboard
+                            FocusScope.of(context).unfocus();
 
-                        //Submitting the data
-                        _submitUserData();
-                      },
-                    ),
+                            //Submitting the data
+                            _submitUserData();
+                          },
+                        ),
 
-                  const Spacer(),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        "Already have an account? Log In Now!",
-                        style: kBodyTextStyle.copyWith(fontSize: 17.sp),
-                      )),
-                  SizedBox(
-                    height: 3.h,
-                  ),
-                ]),
+                      const Spacer(),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Already have an account? Log In Now!",
+                            style: kBodyTextStyle.copyWith(fontSize: 17.sp),
+                          )),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                    ]),
               ),
             ),
           ],

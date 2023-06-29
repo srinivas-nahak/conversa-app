@@ -1,17 +1,54 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:messaging_app/screens/login_screen.dart';
 import 'package:messaging_app/utilities/animated_button.dart';
 import 'package:messaging_app/utilities/constants.dart';
 import 'package:messaging_app/utilities/message_bubble.dart';
 import 'package:messaging_app/utilities/message_text_field.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   ChatScreen({super.key});
 
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
+
+  @override
+  void initState() {
+    _setupPushNotifications();
+
+    super.initState();
+  }
+
+  void _setupPushNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+    await fcm.requestPermission();
+
+    //This token is for individual device notifications
+    //final token = await fcm.getToken();
+
+    //All users of this topic will get notifications
+    fcm.subscribeToTopic("chat");
+
+    //print("Token is $token");
+  }
+
+  void _signOut() {
+    kFirebaseAuth.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(),
+      ),
+    );
+  }
 
   void _storeMessage(BuildContext context) async {
     if (_messageController.text.trim().isEmpty) {
@@ -50,26 +87,43 @@ class ChatScreen extends StatelessWidget {
   }
 
   AppBar _getBlurredAppBar() => AppBar(
-        iconTheme: const IconThemeData().copyWith(color: kPrimaryColor),
+        //iconTheme: const IconThemeData().copyWith(color: kPrimaryColor),
         centerTitle: true,
         flexibleSpace: ClipRect(
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: const SizedBox(),
+            filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+            child: Container(
+              color: Colors.transparent,
+            ),
           ),
         ),
         elevation: 0,
-        backgroundColor: kScaffoldBgColor.withAlpha(200),
+        backgroundColor: const Color(0xffefeeee).withAlpha(200),
         title: Text(
           "Chat Screen",
           style: kBodyTextStyle,
         ),
         actions: [
           IconButton(
-            onPressed: () => kFirebaseAuth.signOut(),
+            onPressed: _signOut,
             icon: const Icon(Icons.power_settings_new),
           )
         ],
+      );
+
+  PreferredSize getNewAppBar() => PreferredSize(
+        preferredSize: Size(MediaQuery.of(context).size.width, 50),
+        child: SafeArea(
+          child: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Text(
+                "Chat Screen",
+                style: kBodyTextStyle,
+              ),
+            ),
+          ),
+        ),
       );
 
   AppBar _getSimpleAppBar() => AppBar(
@@ -91,7 +145,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: _getSimpleAppBar(),
+      appBar: _getBlurredAppBar(),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
