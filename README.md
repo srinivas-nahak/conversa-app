@@ -21,13 +21,12 @@ https://github.com/srinivas-nahak/conversa-app/assets/24781014/f70476a3-d017-4b0
 * Customized message bubbles for enhanced visual appeal and user experience.
 * Created animations in After Effects, exported with Lottie
 * Dynamically edited the Lottie animations during runtime.
-* Implemented subtle animations throughout the app like transition, button clicks etc.
+* Implemented subtle animations throughout the app like transitions, button clicks, etc.
 
-## Features
-- [x] A customized 
-- [x] Lets 
-- [x] Shows you
-- [ ] Makes you 
+## Challenges
+- Integration of Firebase functions for push notification didn't happen with the npm install, thus I had to use "npm install -g yarn"
+- The widget sizes and spacing were too arbitrary for different devices, so optimized it using the "responsive_resizer" plugin. Instead of just using "EdgeInsets.all(double)" I used "EdgeInsets.symmetric(horizontal: value.w, vertical: value.h)" for having a more symmetric feel.
+
 
 
 ## Plugins Used
