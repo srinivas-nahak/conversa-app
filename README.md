@@ -8,12 +8,6 @@ https://github.com/srinivas-nahak/conversa-app/assets/24781014/6fb2ddeb-770e-40c
 
 
 
-<iframe width="420" height="345" src="https://www.youtube.com/embed/tgbNymZ7vqY"/>
-
-
-
-
-
 
 ## Getting Started
 
