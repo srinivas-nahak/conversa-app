@@ -6,7 +6,7 @@ An elegant cross-platform weather forecast app with custom UI that shows the 5-d
 
 ## Screenshots
 
-![Conversa_App_Multiple_Screens](https://github.com/srinivas-nahak/conversa-app/assets/24781014/90856b08-c74b-45e9-8c90-f3cb5a49745c)
+![Conversa_App_Multiple_Screens](https://github.com/srinivas-nahak/conversa-app/assets/24781014/98699215-7653-48f7-a9d8-6d5aae3f4e42)
 
 
 
@@ -15,6 +15,13 @@ An elegant cross-platform weather forecast app with custom UI that shows the 5-d
 https://github.com/srinivas-nahak/conversa-app/assets/24781014/f70476a3-d017-4b06-8b7d-2c5eb7ba6c66
 
 
+## Key Achievements
+* Integrated push notifications using yarn for improved performance.
+* Enabled image uploading for showing the user display picture.
+* Customized message bubbles for enhanced visual appeal and user experience.
+* Created animations in After Effects, exported with Lottie
+* Dynamically edited the Lottie animations during runtime.
+* Implemented subtle animations throughout the app like transition, button clicks etc.
 
 ## Features
 - [x] A customized 
