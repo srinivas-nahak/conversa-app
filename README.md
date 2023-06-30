@@ -2,7 +2,24 @@
 
 
 ## Description
-An elegant cross-platform weather forecast app with custom UI that shows the 5-day forecast. It is made with Flutter, Material Design 3 using the recommended <a href="https://docs.flutter.dev/resources/architectural-overview">Flutter Architecture Guidelines</a>.
+A Firebase integrated messaging app where users can create accounts and log in for an engaging messaging experience. It also has custom animations created in After Effects and integrated into the app using Lottie/Rive. It is made with Flutter, Material Design 3 using the recommended <a href="https://docs.flutter.dev/resources/architectural-overview">Flutter Architecture Guidelines</a>.
+
+## Challenges
+- Integration of Firebase functions for push notification didn't happen with the npm install, thus I had to use "npm install -g yarn"
+- The widget sizes and spacing were too arbitrary for different devices, so I optimized using the "responsive_resizer" plugin. Instead of just using "EdgeInsets.all(double)" I used "EdgeInsets.symmetric(horizontal: value.w, vertical: value.h)" for having a more symmetric feel.
+- Lottie's documentation for dynamic editing of animations was faulty so after several experiments I was able to edit the Lottie animations during runtime.
+Ex- Documentation code
+**`ValueDelegate
+  .position( const ['Shape Layer 1', 'Rectangle', '**'],
+            relative: const Offset(100, 200),
+          ),`**
+
+My code
+**`ValueDelegate
+  .transformPosition( const ['Rectangle', '**'],
+            relative: const Offset(100, 200),
+          ),`**
+
 
 ## Screenshots
 
@@ -15,29 +32,25 @@ An elegant cross-platform weather forecast app with custom UI that shows the 5-d
 https://github.com/srinivas-nahak/conversa-app/assets/24781014/f70476a3-d017-4b06-8b7d-2c5eb7ba6c66
 
 
-## Key Achievements
-* Integrated push notifications using yarn for improved performance.
-* Enabled image uploading for showing the user display picture.
-* Customized message bubbles for enhanced visual appeal and user experience.
-* Created animations in After Effects, exported with Lottie
-* Dynamically edited the Lottie animations during runtime.
-* Implemented subtle animations throughout the app like transitions, button clicks, etc.
 
-## Challenges
-- Integration of Firebase functions for push notification didn't happen with the npm install, thus I had to use "npm install -g yarn"
-- The widget sizes and spacing were too arbitrary for different devices, so optimized it using the "responsive_resizer" plugin. Instead of just using "EdgeInsets.all(double)" I used "EdgeInsets.symmetric(horizontal: value.w, vertical: value.h)" for having a more symmetric feel.
+## Features
+- [x] User creation and authentication using Firebase.
+- [x] Customised vector animations using After Effects and Lottie.
+- [x] Enhanced message bubbles for a better user experience.
+- [x] Subtle transition and button animations.
+- [x] Push notifications on message send.
+- [x] Enabled image uploading for user DP.
+- [x] A visually responsive and aesthetic User Experience.
 
 
 
-## Plugins Used
+## Main Plugins Used
 Plugin Name    
 :-------------------------|
-|geolocator
-|http
-|flutter_riverpod
-|shared_preferences
-|flutter_svg
-|intl
+|firebase(multiple plugins)
+|lottie
+|responsive_sizer
+|image_picker
 
 ## License
 
